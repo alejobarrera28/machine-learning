@@ -1,3 +1,4 @@
+import os
 import pickle
 import numpy as np
 
@@ -12,7 +13,9 @@ def get_data(n):
     if not (1 <= n <= 5):
         raise ValueError("Batch number 'n' must be between 1 and 5 (inclusive).")
 
-    batch_file = f"cifar-10-batches-py/data_batch_{n}"
+    current_dir = os.path.dirname(__file__)
+    batch_file = os.path.join(current_dir, f"data_batch_{n}")
+
 
     batch = unpickle(batch_file)
 
@@ -28,7 +31,8 @@ def get_data(n):
 
 
 def get_test_data():
-    batch_file = f"cifar-10-batches-py/test_batch"
+    current_dir = os.path.dirname(__file__)
+    batch_file = os.path.join(current_dir, f"test_batch")
 
     batch = unpickle(batch_file)
 
