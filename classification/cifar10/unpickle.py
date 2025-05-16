@@ -29,6 +29,18 @@ def get_data(n):
 
     return data, labels
 
+def get_all_data():
+    all_data = []
+    all_labels = []
+    for i in range(1, 6):
+        data, labels = get_data(i)
+        all_data.append(data)
+        all_labels.extend(labels)
+
+    all_data = np.concatenate(all_data, axis=0)
+    return all_data, all_labels
+
+
 
 def get_test_data():
     current_dir = os.path.dirname(__file__)
