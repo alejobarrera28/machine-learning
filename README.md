@@ -1,12 +1,14 @@
 
 # Machine Learning Algorithms – Learning Guide
 
-Welcome to your machine learning learning path! This guide is tailored for practitioners with a solid background in statistics and math, aiming to master classical ML techniques through curated algorithms and real-world datasets.
+Welcome to your machine learning learning path! This guide is tailored for practitioners with some background in statistics and math, aiming to master classical ML techniques through curated algorithms and real-world datasets.
 
 Each category (Classification, Regression, Clustering, and Dimensionality Reduction) includes:
-- A progression of **Core** algorithms
-- **Advanced** options to explore further
-- One high-quality dataset for hands-on experimentation
+- A progression of **Core** algorithms, with each folder containing a detailed explanation and implementation.
+- **Advanced** options to explore further.
+- One high-quality dataset for hands-on experimentation.
+
+> **Note:** This project does not focus on efficient implementations or achieving the best results for each problem; it emphasizes building algorithms from scratch to ensure a clear understanding of how they work.
 
 ---
 
