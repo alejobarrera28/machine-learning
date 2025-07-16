@@ -69,10 +69,10 @@ Each category (Classification, Regression, Clustering, and Dimensionality Reduct
 
 ### ✅ Core Algorithms
 * **Principal Component Analysis (PCA)**
-* **UMAP (Uniform Manifold Approximation and Projection)**
+* **t-Distributed Stochastic Neighbor Embedding (t-SNE)**
 
 ### 🚀 Advanced
-- **t-Distributed Stochastic Neighbor Embedding (t-SNE)**
+- **UMAP (Uniform Manifold Approximation and Projection)**
 - **Autoencoders**
 
 
