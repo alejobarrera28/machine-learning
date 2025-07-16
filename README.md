@@ -17,8 +17,7 @@ Each category (Classification, Regression, Clustering, and Dimensionality Reduct
 ### ✅ Core Algorithms
 * **Naive Bayes**
 * **Logistic Regression**
-* **Decision Trees**
-* **Random forest**
+* **Decision Trees** & **Random forest**
 * **Support Vector Machines (SVM)**
 * **Gradient Boosting Machines (XGBoost, LightGBM)**
 
