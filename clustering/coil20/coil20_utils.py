@@ -1,7 +1,10 @@
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 from glob import glob
 from PIL import Image
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 
 
 def load_image(path, as_gray=True):
@@ -17,36 +20,38 @@ def load_image(path, as_gray=True):
     """
     img = Image.open(path)
     if as_gray:
-        img = img.convert('L')
+        img = img.convert("L")
     arr = np.array(img, dtype=np.float32) / 255.0
     return arr
 
 
 def load_all_images(as_gray=True):
     """
-    Load all PNG images in the dataset folder (located alongside this file) and return data with labels.
+    Carga todas las imágenes PNG en la carpeta 'data/' y devuelve los datos con etiquetas.
 
-    Assumes the script lives in 'coli20/' with 20 subfolders, each containing 72 images named 'obj{i}_{j}.png'.
-    Labels are extracted from the filename prefix (e.g., 'obj3').
+    Las etiquetas se extraen del nombre del archivo (por ejemplo, 'obj3_45.png' -> 'obj3').
 
     Args:
-        as_gray: If True, convert images to grayscale.
+        as_gray: Si es True, convierte las imágenes a escala de grises.
 
     Returns:
-        X: NumPy array of shape (n_samples, height, width).
-        y: List of labels (e.g., ['obj1', 'obj2', ...]).
+        X: Arreglo NumPy de imágenes de forma (n_samples, height, width).
+        y: Lista de etiquetas (e.g., ['obj1', 'obj2', ...]).
     """
-
-    base_dir = os.path.dirname(__file__)
-    pattern = os.path.join(base_dir, '*', 'obj*__*.png')
-    image_paths = sorted(glob(pattern))
+    image_paths = sorted(glob("coil20/data/*.png"))
 
     images = []
     labels = []
-    for img_path in image_paths:
-        images.append(load_image(img_path, as_gray))
-        fname = os.path.basename(img_path)
-        label = fname.split('_')[0]
+    for path in image_paths:
+        img = Image.open(path)
+        if as_gray:
+            img = img.convert("L")
+        else:
+            img = img.convert("RGB")
+        images.append(np.array(img))
+
+        fname = os.path.basename(path)
+        label = fname.split("_")[0]
         labels.append(label)
 
     X = np.stack(images, axis=0)
@@ -67,20 +72,60 @@ def flatten_images(X):
     return X.reshape(n, h * w)
 
 
-def sample_images(X, y, n_samples=10, random_seed=None):
+def extract_images_pca(X, n_components=50, whiten=False):
     """
-    Randomly sample images and their labels.
+    Apply PCA to a stack of images.
 
     Args:
-        X: Image array of shape (n_samples, height, width).
-        y: Corresponding list of labels.
-        n_samples: Number of images to sample.
-        random_seed: Seed for reproducibility.
+        X: NumPy array of images with shape (n_samples, height*width).
+        n_components: Number of principal components to keep.
+        whiten: Whether to whiten the components (scales components to unit variance).
 
     Returns:
-        Tuple of (X_sample, y_sample).
+        X_pca: Array of shape (n_samples, n_components) containing the PCA-transformed data.
+        pca: The fitted sklearn.decomposition.PCA object (useful if you want explained variance, inverse transform, etc.).
     """
-    if random_seed is not None:
-        np.random.seed(random_seed)
-    idx = np.random.choice(len(X), size=n_samples, replace=False)
-    return X[idx], [y[i] for i in idx]
+
+    if X.ndim == 3:
+        n, h, w = X.shape
+        X = X.reshape(n, h * w)
+
+    pca = PCA(
+        n_components=n_components,
+        whiten=whiten,
+        svd_solver="randomized",
+        random_state=0,
+    )
+    X_pca = pca.fit_transform(X)
+
+    return X_pca, pca
+
+
+def extract_images_tSNE(X, n_components=2, perplexity=30, random_state=0):
+    """
+    Apply t-SNE to a stack of images or feature vectors (e.g., HOG features).
+
+    Args:
+        X: Array of shape (n_samples, n_features) or (n_samples, height, width).
+        n_components: Number of dimensions for the embedding (must be <=3 for 'barnes_hut').
+        perplexity: t-SNE perplexity.
+        random_state: Random seed for reproducibility.
+
+    Returns:
+        X_tsne: Array of shape (n_samples, n_components).
+    """
+    if X.ndim == 3:
+        n, h, w = X.shape
+        X = X.reshape(n, h * w)
+
+    method = "exact" if n_components > 3 else "barnes_hut"
+
+    tsne = TSNE(
+        n_components=n_components,
+        perplexity=perplexity,
+        random_state=random_state,
+        init="pca",
+        method=method,
+    )
+
+    return tsne.fit_transform(X)
