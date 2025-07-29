@@ -5,32 +5,32 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 
 
-def unpickle(file_path):
+def unpickle(file_path: str) -> dict[bytes, any]:
     """
     Load a CIFAR-10 batch file using pickle.
 
     Parameters:
-        file_path (str): Path to the batch file.
+        file_path: Path to the batch file.
 
     Returns:
-        dict: Dictionary containing data and labels.
+        Dictionary containing data and labels.
     """
     with open(file_path, "rb") as fo:
         data_dict = pickle.load(fo, encoding="bytes")
     return data_dict
 
 
-def get_data(batch_number):
+def get_data(batch_number: int) -> tuple[np.ndarray, np.ndarray]:
     """
     Load a single training batch of the CIFAR-10 dataset.
 
     Parameters:
-        batch_number (int): Number of the batch to load (1 through 5).
+        batch_number: Number of the batch to load (1 through 5).
 
     Returns:
-        tuple:
-            - data (np.ndarray): Array of shape (10000, 32, 32, 3) containing image data.
-            - labels (list): List of 10000 integer labels.
+        Tuple containing:
+            - data: Array of shape (10000, 32, 32, 3) containing image data.
+            - labels: Array of 10000 integer labels.
     """
     if not (1 <= batch_number <= 5):
         raise ValueError("Batch number must be between 1 and 5.")
@@ -50,14 +50,14 @@ def get_data(batch_number):
     return data, np.array(labels)
 
 
-def get_all_data():
+def get_all_data() -> tuple[np.ndarray, np.ndarray]:
     """
     Load all five training batches and concatenate them.
 
     Returns:
-        tuple:
-            - all_data (np.ndarray): Array of shape (50000, 32, 32, 3).
-            - all_labels (list): List of 50000 labels.
+        Tuple containing:
+            - all_data: Array of shape (50000, 32, 32, 3).
+            - all_labels: Array of 50000 labels.
     """
     data_list = []
     label_list = []
@@ -71,14 +71,14 @@ def get_all_data():
     return all_data, np.array(label_list)
 
 
-def get_test_data():
+def get_test_data() -> tuple[np.ndarray, np.ndarray]:
     """
     Load the test batch of the CIFAR-10 dataset.
 
     Returns:
-        tuple:
-            - data (np.ndarray): Array of shape (10000, 32, 32, 3).
-            - labels (list): List of 10000 labels.
+        Tuple containing:
+            - data: Array of shape (10000, 32, 32, 3).
+            - labels: Array of 10000 labels.
     """
     current_dir = os.path.dirname(__file__)
     test_batch_path = os.path.join(current_dir, "test_batch")
@@ -93,7 +93,7 @@ def get_test_data():
     return data, np.array(labels)
 
 
-def flatten_images(X):
+def flatten_images(X: np.ndarray) -> np.ndarray:
     """
     Flatten images for clustering algorithms.
 
@@ -107,7 +107,7 @@ def flatten_images(X):
     return X.reshape(n, h * w * c)
 
 
-def extract_images_pca(X, n_components=50, whiten=False):
+def extract_images_pca(X: np.ndarray, n_components: int = 50, whiten: bool = False) -> tuple[np.ndarray, PCA]:
     """
     Apply PCA to a stack of images.
 
@@ -117,8 +117,9 @@ def extract_images_pca(X, n_components=50, whiten=False):
         whiten: Whether to whiten the components (scales components to unit variance).
 
     Returns:
-        X_pca: Array of shape (n_samples, n_components) containing the PCA-transformed data.
-        pca: The fitted sklearn.decomposition.PCA object (useful if you want explained variance, inverse transform, etc.).
+        Tuple containing:
+            - X_pca: Array of shape (n_samples, n_components) containing the PCA-transformed data.
+            - pca: The fitted sklearn.decomposition.PCA object.
     """
 
     if X.ndim == 3:
@@ -136,7 +137,7 @@ def extract_images_pca(X, n_components=50, whiten=False):
     return X_pca, pca
 
 
-def extract_images_tSNE(X, n_components=2, perplexity=30, random_state=0):
+def extract_images_tsne(X: np.ndarray, n_components: int = 2, perplexity: int = 30, random_state: int = 0) -> np.ndarray:
     """
     Apply t-SNE to a stack of images or feature vectors (e.g., HOG features).
 
@@ -147,7 +148,7 @@ def extract_images_tSNE(X, n_components=2, perplexity=30, random_state=0):
         random_state: Random seed for reproducibility.
 
     Returns:
-        X_tsne: Array of shape (n_samples, n_components).
+        Array of shape (n_samples, n_components).
     """
     if X.ndim == 3:
         n, h, w = X.shape
@@ -166,19 +167,18 @@ def extract_images_tSNE(X, n_components=2, perplexity=30, random_state=0):
     return tsne.fit_transform(X)
 
 
-def normalize_data(X, mean=None, std=None):
+def normalize_data(X: np.ndarray, mean: np.ndarray | None = None, std: np.ndarray | None = None) -> np.ndarray | tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Normalize data values by subtracting the mean and dividing by the standard deviation.
 
     Args:
-        X (np.ndarray): Data array of shape (n_samples, n_features).
-        mean (np.ndarray, optional): If provided, use this mean for normalization.
-        std (np.ndarray, optional): If provided, use this std for normalization.
+        X: Data array of shape (n_samples, n_features).
+        mean: If provided, use this mean for normalization.
+        std: If provided, use this std for normalization.
 
     Returns:
-        np.ndarray or Tuple[np.ndarray, np.ndarray, np.ndarray]:
-            - If mean and std are provided: returns normalized data only.
-            - If mean and std are not provided: returns normalized data, mean, and std.
+        If mean and std are provided: returns normalized data only.
+        If mean and std are not provided: returns normalized data, mean, and std.
     """
     if mean is None or std is None:
         mean = X.mean(axis=0)
