@@ -1,86 +1,114 @@
+# Machine Learning Algorithms - From Scratch Implementation
 
-# Machine Learning Algorithms – Learning Guide
+A comprehensive collection of machine learning algorithms implemented from scratch using NumPy, with extensive mathematical explanations and hands-on experiments using real datasets.
 
-Welcome to your machine learning learning path! This guide is tailored for practitioners with some background in statistics and math, aiming to master classical ML techniques through curated algorithms and real-world datasets.
+> **Focus:** Educational understanding over performance optimization. Each algorithm is built from the ground up to demonstrate core mathematical concepts.
 
-Each category (Classification, Regression, Clustering, and Dimensionality Reduction) includes:
-- A progression of **Core** algorithms, with each folder containing a detailed explanation and implementation.
-- **Advanced** options to explore further.
-- One high-quality dataset for hands-on experimentation.
+## 🚀 Quick Start
 
-> **Note:** This project does not focus on efficient implementations or achieving the best results for each problem; it emphasizes building algorithms from scratch to ensure a clear understanding of how they work.
+### Installation
+```bash
+# Clone the repository
+git clone https://github.com/alejobarrera28/machine-learning
+cd machine-learning
 
----
+# Install dependencies
+pip install -r requirements.txt
+```
 
-## 🟩 Classification
-
-### ✅ Core Algorithms
-* **Naive Bayes**
-* **Logistic Regression**
-* **Decision Trees** & **Random forest**
-* **Support Vector Machines (SVM)**
-* **Gradient Boosting Machines (XGBoost, LightGBM)**
-
-### 🚀 Advanced
-- **Multi-layer Perceptron (MLP)**
-- **Convolutional Neural Networks (CNN)**
-- **Recurrent Neural Networks (RNNs)**
-- **Transformers**
-
-**📂 Dataset:** [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) — Images of 10 object classes.  
+### Usage
+Navigate to any category folder and open the Jupyter notebooks to explore algorithm implementations with step-by-step explanations.
 
 ---
 
-## 🟨 Regression
+## 📚 Implemented Algorithms
 
-### ✅ Core Algorithms
-* **Linear Regression**
-* **Ridge & Lasso Regression**
-* **Decision Trees**
-* **Random Forest**
-* **Gradient Boosting Regressors (XGBoost, LightGBM)** 
+###  Classification
+- **Logistic Regression** - Multi-class with softmax, regularization (L1/L2)
+- **Naive Bayes** - Probabilistic classification
+- **Support Vector Machine** - Linear and kernel methods
+- **Random Forest** - Ensemble decision trees
+- **Gradient Boosting Machines** - Advanced boosting techniques
 
+**Dataset:** [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) - 60,000 32x32 color images in 10 classes
 
-### 🚀 Advanced
-- **Support Vector Regression (SVR)**
-- **Multi-layer Perceptron (MLP)**
+### Regression
+- **Linear Regression** - OLS with closed-form solution
+- **Ridge Regression** - L2 regularization
+- **Lasso Regression** - L1 regularization with feature selection
 
-**📂 Dataset:** [Boston Housing Prices](https://scikit-learn.org/stable/datasets/toy_dataset.html#boston-house-prices-dataset)  
+**Dataset:** [California Housing](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html) - 20,640 housing samples with 8 features
 
----
+### Clustering
+- **K-Means** - Lloyd's algorithm with k-means++ initialization
+- **Gaussian Mixture Models** - EM algorithm with full covariance
+- **DBSCAN** - Density-based clustering with noise detection
 
-## 🟦 Clustering
+**Dataset:** [COIL-20](http://www.cs.columbia.edu/CAVE/software/softlib/coil-20.php) - 1,440 grayscale images of 20 objects
 
-### ✅ Core Algorithms
-* **k-Means**
-* **Gaussian Mixture Models (GMM)**
-* **DBSCAN**
+### Dimensionality Reduction
+- **Principal Component Analysis (PCA)** - Eigenvalue decomposition
+- **t-SNE** - Non-linear manifold learning
 
-### 🚀 Advanced
-- **Hierarchical Clustering**
-- **Spectral Clustering**
-
-**📂 Dataset:** [COIL-20](http://www.cs.columbia.edu/CAVE/software/softlib/coil-20.php) — Gray-scale images of 20 objects.  
-
----
-
-## 🟪 Dimensionality Reduction
-
-### ✅ Core Algorithms
-* **Principal Component Analysis (PCA)**
-* **t-Distributed Stochastic Neighbor Embedding (t-SNE)**
-
-### 🚀 Advanced
-- **UMAP (Uniform Manifold Approximation and Projection)**
-- **Autoencoders**
-
-
-**📂 Dataset:** [Olivetti Faces](https://scikit-learn.org/stable/datasets/real_world.html#olivetti-faces) — Facial images of 40 individuals.  
+**Dataset:** [Olivetti Faces](https://scikit-learn.org/stable/datasets/real_world.html#olivetti-faces) - 400 face images (40 people × 10 images)
 
 ---
 
-## Final Thoughts
+## 🛠️ Key Features
 
-These algorithms were selected to support the understanding of classical ML techniques. While deep learning is dominant in many areas today, mastering these algorithms will give you a solid foundation for understanding and innovating with more complex models later.
+### **Comprehensive Image Processing**
+Advanced feature extraction pipeline in `images/image_preprocessing.py`:
+- **Basic:** Raw pixels, color histograms
+- **Classical:** HOG, LBP, Gabor filters, Haralick texture
+- **Advanced:** SIFT/SURF/ORB with Bag-of-Visual-Words
 
-Happy learning!
+### **Mathematical Deep Dives**
+Each notebook includes:
+- **LaTeX equations** explaining the mathematics
+- **Step-by-step derivations** of optimization algorithms
+- **Geometric intuitions** with visualizations
+- **Regularization techniques** (L1/L2) with proper implementations
+
+### **Real Dataset Integration**
+- **Preprocessing pipelines** tailored to each dataset
+- **Feature scaling and normalization** utilities
+- **Train/test splits** with proper evaluation metrics
+- **Visualization outputs** saved for each algorithm
+
+---
+
+## 🔍 Algorithm Details
+
+### Implementation Philosophy
+- **From-scratch implementations** using only NumPy for core algorithms
+- **Educational focus** - prioritizes understanding over efficiency
+- **Mathematical rigor** - includes derivations and geometric intuitions
+- **Practical integration** - works with real-world datasets
+
+### Evaluation Metrics
+- **Classification:** Accuracy, cross-entropy loss
+- **Clustering:** Adjusted Rand Index (ARI)
+- **Regression:** Mean Squared Error (MSE), R²
+
+---
+
+## 📖 Additional Resources
+
+- **`optimizers.md`** - Comprehensive guide to optimization algorithms (SGD, Adam, L-BFGS, etc.)
+- **Visualization outputs** - Each algorithm saves plots showing results
+
+---
+
+## 🤝 Contributing
+
+This is an educational project focused on understanding ML fundamentals. Feel free to:
+- Add new algorithm implementations
+- Improve mathematical explanations
+- Enhance visualizations
+- Add more comprehensive examples
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
