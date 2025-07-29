@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 
 
-def load_image(path, as_gray=True):
+def load_image(path: str, as_gray: bool = True) -> np.ndarray:
     """
     Load an image and return it as a NumPy array.
 
@@ -25,18 +25,19 @@ def load_image(path, as_gray=True):
     return arr
 
 
-def load_all_images(as_gray=True):
+def load_all_images(as_gray: bool = True) -> tuple[np.ndarray, list[str]]:
     """
-    Carga todas las imágenes PNG en la carpeta 'data/' y devuelve los datos con etiquetas.
+    Load all PNG images in the 'data/' folder and return data with labels.
 
-    Las etiquetas se extraen del nombre del archivo (por ejemplo, 'obj3_45.png' -> 'obj3').
+    Labels are extracted from the filename (e.g., 'obj3_45.png' -> 'obj3').
 
     Args:
-        as_gray: Si es True, convierte las imágenes a escala de grises.
+        as_gray: If True, convert images to grayscale.
 
     Returns:
-        X: Arreglo NumPy de imágenes de forma (n_samples, height, width).
-        y: Lista de etiquetas (e.g., ['obj1', 'obj2', ...]).
+        Tuple containing:
+            - X: NumPy array of images with shape (n_samples, height, width).
+            - y: List of labels (e.g., ['obj1', 'obj2', ...]).
     """
     image_paths = sorted(glob("coil20/data/*.png"))
 
@@ -58,7 +59,7 @@ def load_all_images(as_gray=True):
     return X, labels
 
 
-def flatten_images(X):
+def flatten_images(X: np.ndarray) -> np.ndarray:
     """
     Flatten images for clustering algorithms.
 
@@ -72,7 +73,7 @@ def flatten_images(X):
     return X.reshape(n, h * w)
 
 
-def extract_images_pca(X, n_components=50, whiten=False):
+def extract_images_pca(X: np.ndarray, n_components: int = 50, whiten: bool = False) -> tuple[np.ndarray, PCA]:
     """
     Apply PCA to a stack of images.
 
@@ -82,8 +83,9 @@ def extract_images_pca(X, n_components=50, whiten=False):
         whiten: Whether to whiten the components (scales components to unit variance).
 
     Returns:
-        X_pca: Array of shape (n_samples, n_components) containing the PCA-transformed data.
-        pca: The fitted sklearn.decomposition.PCA object (useful if you want explained variance, inverse transform, etc.).
+        Tuple containing:
+            - X_pca: Array of shape (n_samples, n_components) containing the PCA-transformed data.
+            - pca: The fitted sklearn.decomposition.PCA object.
     """
 
     if X.ndim == 3:
@@ -101,7 +103,7 @@ def extract_images_pca(X, n_components=50, whiten=False):
     return X_pca, pca
 
 
-def extract_images_tSNE(X, n_components=2, perplexity=30, random_state=0):
+def extract_images_tsne(X: np.ndarray, n_components: int = 2, perplexity: int = 30, random_state: int = 0) -> np.ndarray:
     """
     Apply t-SNE to a stack of images or feature vectors (e.g., HOG features).
 
@@ -112,7 +114,7 @@ def extract_images_tSNE(X, n_components=2, perplexity=30, random_state=0):
         random_state: Random seed for reproducibility.
 
     Returns:
-        X_tsne: Array of shape (n_samples, n_components).
+        Array of shape (n_samples, n_components).
     """
     if X.ndim == 3:
         n, h, w = X.shape
