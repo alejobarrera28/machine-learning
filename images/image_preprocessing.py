@@ -11,18 +11,18 @@ from sklearn.cluster import KMeans
 
 
 # Utility to handle single vs batch
-def _apply_batch(fn, imgs, *args, **kwargs):
+def _apply_batch(fn, imgs: np.ndarray | list[np.ndarray], *args, **kwargs) -> np.ndarray:
     """
     Apply a feature-extraction function to a single image or a batch of images.
 
     Parameters:
-        fn (callable): Function to apply to each image. Should take (img, *args, **kwargs).
-        imgs (ndarray or list): Single image array (2D or 3D) or batch (list or 4D array).
+        fn: Function to apply to each image. Should take (img, *args, **kwargs).
+        imgs: Single image array (2D or 3D) or batch (list or 4D array).
         *args: Positional arguments to pass to fn.
         **kwargs: Keyword arguments to pass to fn.
 
     Returns:
-        ndarray: Feature array for a single image, or stacked array for a batch.
+        Feature array for a single image, or stacked array for a batch.
     """
     # Single image: 2D gray or 3D with channel dim 1,3,4
     if isinstance(imgs, np.ndarray) and (
@@ -35,15 +35,15 @@ def _apply_batch(fn, imgs, *args, **kwargs):
     return np.stack(outputs, axis=0)
 
 
-def extract_raw_pixels(imgs):
+def extract_raw_pixels(imgs: np.ndarray | list[np.ndarray]) -> np.ndarray:
     """
     Flatten raw pixel values into a normalized feature vector.
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
+        imgs: Single image or batch of images.
 
     Returns:
-        ndarray: 1D or 2D array of normalized pixel values in [0,1].
+        1D or 2D array of normalized pixel values in [0,1].
     """
 
     def _single(img):
@@ -53,16 +53,16 @@ def extract_raw_pixels(imgs):
     return _apply_batch(_single, imgs)
 
 
-def extract_color_histogram(imgs, bins=(16, 16, 16)):
+def extract_color_histogram(imgs: np.ndarray | list[np.ndarray], bins: tuple[int, int, int] = (16, 16, 16)) -> np.ndarray:
     """
     Compute a 3D color histogram over BGR channels.
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        bins (tuple of int): Number of bins per channel (B, G, R).
+        imgs: Single image or batch of images.
+        bins: Number of bins per channel (B, G, R).
 
     Returns:
-        ndarray: Flattened and normalized histogram feature vector.
+        Flattened and normalized histogram feature vector.
     """
 
     def _single(img, bins):
@@ -74,18 +74,18 @@ def extract_color_histogram(imgs, bins=(16, 16, 16)):
     return _apply_batch(_single, imgs, bins)
 
 
-def extract_hog(imgs, pixels_per_cell=(8, 8), cells_per_block=(2, 2), orientations=9):
+def extract_hog(imgs: np.ndarray | list[np.ndarray], pixels_per_cell: tuple[int, int] = (8, 8), cells_per_block: tuple[int, int] = (2, 2), orientations: int = 9) -> np.ndarray:
     """
     Extract Histogram of Oriented Gradients (HOG) features.
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        pixels_per_cell (tuple): Size (in pixels) of a cell.
-        cells_per_block (tuple): Number of cells in each block.
-        orientations (int): Number of orientation bins.
+        imgs: Single image or batch of images.
+        pixels_per_cell: Size (in pixels) of a cell.
+        cells_per_block: Number of cells in each block.
+        orientations: Number of orientation bins.
 
     Returns:
-        ndarray: HOG descriptor vector or batch of descriptors.
+        HOG descriptor vector or batch of descriptors.
     """
 
     def _single(img, pp_cell, cp_block, orient):
@@ -105,16 +105,16 @@ def extract_hog(imgs, pixels_per_cell=(8, 8), cells_per_block=(2, 2), orientatio
 
 
 # 4. Haar-like Features
-def extract_haar_features(imgs, feature_types=None):
+def extract_haar_features(imgs: np.ndarray | list[np.ndarray], feature_types: list[str] = None) -> np.ndarray:
     """
     Compute Haar-like features on the image.
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        feature_types (list of str): Haar feature types, e.g. ['type-2-x'].
+        imgs: Single image or batch of images.
+        feature_types: Haar feature types, e.g. ['type-2-x'].
 
     Returns:
-        ndarray: Array of Haar-like feature values.
+        Array of Haar-like feature values.
     """
 
     def _single(img):
@@ -127,17 +127,17 @@ def extract_haar_features(imgs, feature_types=None):
     return _apply_batch(_single, imgs)
 
 
-def extract_lbp(imgs, P=8, R=1):
+def extract_lbp(imgs: np.ndarray | list[np.ndarray], P: int = 8, R: float = 1) -> np.ndarray:
     """
     Compute Local Binary Pattern (LBP) histogram features.
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        P (int): Number of circularly symmetric neighbor set points.
-        R (float): Radius of circle.
+        imgs: Single image or batch of images.
+        P: Number of circularly symmetric neighbor set points.
+        R: Radius of circle.
 
     Returns:
-        ndarray: Normalized histogram of LBP patterns.
+        Normalized histogram of LBP patterns.
     """
 
     def _single(img):
@@ -153,18 +153,18 @@ def extract_lbp(imgs, P=8, R=1):
 
 
 def extract_gabor_features(
-    imgs, frequencies=[0.1, 0.2, 0.3], thetas=[0, np.pi / 4, np.pi / 2]
-):
+    imgs: np.ndarray | list[np.ndarray], frequencies: list[float] = [0.1, 0.2, 0.3], thetas: list[float] = [0, np.pi / 4, np.pi / 2]
+) -> np.ndarray:
     """
     Extract Gabor filter response statistics (mean & variance).
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        frequencies (list of float): Gabor frequencies.
-        thetas (list of float): Gabor orientations.
+        imgs: Single image or batch of images.
+        frequencies: Gabor frequencies.
+        thetas: Gabor orientations.
 
     Returns:
-        ndarray: Feature vector of mean and variance for each filter.
+        Feature vector of mean and variance for each filter.
     """
 
     def _single(img):
@@ -179,18 +179,18 @@ def extract_gabor_features(
     return _apply_batch(_single, imgs)
 
 
-def extract_haralick_features(imgs, distances=[1], angles=[0]):
+def extract_haralick_features(imgs: np.ndarray | list[np.ndarray], distances: list[int] = [1], angles: list[float] = [0]) -> np.ndarray:
     """
     Compute Haralick texture features from Gray-Level Co-occurrence Matrix (GLCM).
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        distances (list of int): Pixel-pair distance offsets.
-        angles (list of float): Pixel-pair angles in radians.
+        imgs: Single image or batch of images.
+        distances: Pixel-pair distance offsets.
+        angles: Pixel-pair angles in radians.
 
     Returns:
-        ndarray: Array of Haralick feature values (contrast, dissimilarity,
-                 homogeneity, energy, correlation).
+        Array of Haralick feature values (contrast, dissimilarity,
+        homogeneity, energy, correlation).
     """
 
     def _single(img):
@@ -210,16 +210,16 @@ def extract_haralick_features(imgs, distances=[1], angles=[0]):
     return _apply_batch(_single, imgs)
 
 
-def extract_sift_bovw(imgs, codebook: KMeans):
+def extract_sift_bovw(imgs: np.ndarray | list[np.ndarray], codebook: KMeans) -> np.ndarray:
     """
     Extract Bag-of-Visual-Words histogram using SIFT descriptors.
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        codebook (KMeans): Trained KMeans model as visual vocabulary.
+        imgs: Single image or batch of images.
+        codebook: Trained KMeans model as visual vocabulary.
 
     Returns:
-        ndarray: Normalized histogram of visual words.
+        Normalized histogram of visual words.
     """
 
     def _single(img, cb):
@@ -237,16 +237,16 @@ def extract_sift_bovw(imgs, codebook: KMeans):
     return _apply_batch(_single, imgs, codebook)
 
 
-def extract_surf_bovw(imgs, codebook: KMeans):
+def extract_surf_bovw(imgs: np.ndarray | list[np.ndarray], codebook: KMeans) -> np.ndarray:
     """
     Extract Bag-of-Visual-Words histogram using SURF descriptors.
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        codebook (KMeans): Trained KMeans model as visual vocabulary.
+        imgs: Single image or batch of images.
+        codebook: Trained KMeans model as visual vocabulary.
 
     Returns:
-        ndarray: Normalized histogram of visual words.
+        Normalized histogram of visual words.
     """
 
     def _single(img, cb):
@@ -264,16 +264,16 @@ def extract_surf_bovw(imgs, codebook: KMeans):
     return _apply_batch(_single, imgs, codebook)
 
 
-def extract_orb_bovw(imgs, codebook: KMeans):
+def extract_orb_bovw(imgs: np.ndarray | list[np.ndarray], codebook: KMeans) -> np.ndarray:
     """
     Extract Bag-of-Visual-Words histogram using ORB descriptors.
 
     Parameters:
-        imgs (ndarray or list): Single image or batch of images.
-        codebook (KMeans): Trained KMeans model as visual vocabulary.
+        imgs: Single image or batch of images.
+        codebook: Trained KMeans model as visual vocabulary.
 
     Returns:
-        ndarray: Normalized histogram of visual words.
+        Normalized histogram of visual words.
     """
 
     def _single(img, cb):
