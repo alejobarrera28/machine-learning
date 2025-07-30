@@ -62,12 +62,15 @@ Advanced feature extraction pipeline in `images/image_preprocessing.py`:
 - **Classical:** HOG, LBP, Gabor filters, Haralick texture
 - **Advanced:** SIFT/SURF/ORB with Bag-of-Visual-Words
 
-### **Mathematical Deep Dives**
-Each notebook includes:
-- **LaTeX equations** explaining the mathematics
-- **Step-by-step derivations** of optimization algorithms
-- **Geometric intuitions** with visualizations
-- **Regularization techniques** (L1/L2) with proper implementations
+### **Standardized Algorithm Structure**
+All algorithm notebooks follow a consistent educational template:
+- **Algorithm Name & Description** - Clear introduction with key concepts
+- **Visual Overview** - Diagrams illustrating the algorithm's approach
+- **Mathematical Foundation** - Core equations and theoretical background
+- **Algorithm Steps** - Step-by-step breakdown of the implementation
+- **Advanced Topics** - Extensions and deeper mathematical concepts
+- **Key Characteristics** - Advantages, limitations, and use cases
+
 
 ### **Real Dataset Integration**
 - **Preprocessing pipelines** tailored to each dataset
